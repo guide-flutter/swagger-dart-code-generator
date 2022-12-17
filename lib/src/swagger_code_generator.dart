@@ -106,6 +106,9 @@ class SwaggerCodeGenerator {
   String generateDateToJson(GeneratorOptions options) =>
       _getSwaggerAdditionsGenerator(options).generateDateToJson();
 
+  String generateNumToStringFromJson(GeneratorOptions options) =>
+      _getSwaggerAdditionsGenerator(options).generateNumToStringFromJson();
+
   SwaggerAdditionsGenerator _getSwaggerAdditionsGenerator(
           GeneratorOptions options) =>
       SwaggerAdditionsGenerator(options);
