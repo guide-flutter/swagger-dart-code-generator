@@ -8,6 +8,7 @@ part of 'generator_options.dart';
 
 GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
       withBaseUrl: json['with_base_url'] as bool? ?? true,
+      addBasePathToRequests: json['add_base_path_to_requests'] as bool? ?? true,
       withConverter: json['with_converter'] as bool? ?? true,
       ignoreHeaders: json['ignore_headers'] as bool? ?? false,
       separateModels: json['separate_models'] as bool? ?? false,
@@ -72,17 +73,25 @@ GeneratorOptions _$GeneratorOptionsFromJson(Map json) => GeneratorOptions(
               ?.map((e) => e as String)
               .toList() ??
           [],
+      generateToJsonFor: (json['generate_to_json_for'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
+      multipartFileType: json['multipart_file_type'] as String? ?? 'List<int>',
     );
 
 Map<String, dynamic> _$GeneratorOptionsToJson(GeneratorOptions instance) =>
     <String, dynamic>{
       'use_path_for_request_names': instance.usePathForRequestNames,
       'with_base_url': instance.withBaseUrl,
+      'add_base_path_to_requests': instance.addBasePathToRequests,
       'page_width': instance.pageWidth,
       'override_to_string': instance.overrideToString,
       'override_equals_and_hashcode': instance.overrideEqualsAndHashcode,
+      'multipart_file_type': instance.multipartFileType,
       'with_converter': instance.withConverter,
       'overriden_models': instance.overridenModels,
+      'generate_to_json_for': instance.generateToJsonFor,
       'additional_headers': instance.additionalHeaders,
       'input_urls': instance.inputUrls,
       'nullable_models': instance.nullableModels,

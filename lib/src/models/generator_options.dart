@@ -7,6 +7,7 @@ class GeneratorOptions {
   /// Instantiate generator options.
   GeneratorOptions({
     this.withBaseUrl = true,
+    this.addBasePathToRequests = false,
     this.withConverter = true,
     this.ignoreHeaders = false,
     this.separateModels = false,
@@ -32,6 +33,8 @@ class GeneratorOptions {
     this.overrideToString = true,
     this.pageWidth,
     this.overridenModels = const [],
+    this.generateToJsonFor = const [],
+    this.multipartFileType = 'List<int>',
   });
 
   /// Build options from a JSON map.
@@ -44,6 +47,9 @@ class GeneratorOptions {
   @JsonKey(defaultValue: true)
   final bool withBaseUrl;
 
+  @JsonKey(defaultValue: false)
+  final bool addBasePathToRequests;
+
   @JsonKey(defaultValue: null)
   final int? pageWidth;
 
@@ -53,11 +59,17 @@ class GeneratorOptions {
   @JsonKey(defaultValue: true)
   final bool overrideEqualsAndHashcode;
 
+  @JsonKey(defaultValue: 'List<int>')
+  final String multipartFileType;
+
   @JsonKey(defaultValue: true)
   final bool withConverter;
 
   @JsonKey(defaultValue: [])
   final List<String> overridenModels;
+
+  @JsonKey(defaultValue: [])
+  final List<String> generateToJsonFor;
 
   @JsonKey(defaultValue: [])
   final List<String> additionalHeaders;

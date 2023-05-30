@@ -198,21 +198,38 @@ class SwaggerDartCodeGenerator implements Builder {
   }) async {
     final codeGenerator = SwaggerCodeGenerator();
 
-    final models = codeGenerator.generateModels(
-        contents, removeFileExtension(fileNameWithExtension), options);
+    final fileWithoutExtension = removeFileExtension(fileNameWithExtension);
 
-    final responses = codeGenerator.generateResponses(
-        contents, removeFileExtension(fileNameWithExtension), options);
+    final allEnums = codeGenerator.generateAllEnums(
+      root: contents,
+      fileName: fileWithoutExtension,
+      options: options,
+    );
+
+    final models = codeGenerator.generateModels(
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
 
     final requestBodies = codeGenerator.generateRequestBodies(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      options,
+      allEnums,
+    );
 
     final enums = codeGenerator.generateEnums(
-        contents, removeFileExtension(fileNameWithExtension), options);
+      contents,
+      fileWithoutExtension,
+      allEnums,
+      options,
+    );
 
     final imports = codeGenerator.generateImportsContent(
       fileNameWithoutExtension,
-      models.isNotEmpty || requestBodies.isNotEmpty || responses.isNotEmpty,
+      models.isNotEmpty || requestBodies.isNotEmpty,
       options.buildOnlyModels,
       enums.isNotEmpty,
       options.separateModels,
@@ -220,10 +237,12 @@ class SwaggerDartCodeGenerator implements Builder {
     );
 
     final requests = codeGenerator.generateRequests(
-        contents,
-        getClassNameFromFileName(fileNameWithExtension),
-        removeFileExtension(fileNameWithExtension),
-        options);
+      contents,
+      getClassNameFromFileName(fileNameWithExtension),
+      removeFileExtension(fileNameWithExtension),
+      options,
+      allEnums,
+    );
 
     final customDecoder = codeGenerator.generateCustomJsonConverter(
         removeFileExtension(fileNameWithExtension), options);
@@ -243,7 +262,6 @@ class SwaggerDartCodeGenerator implements Builder {
               imports,
               requests,
               options.separateModels ? '' : models,
-              options.separateModels ? '' : responses,
               options.separateModels ? '' : requestBodies,
               customDecoder,
               options.separateModels ? '' : dateToJson,
@@ -266,7 +284,6 @@ class SwaggerDartCodeGenerator implements Builder {
       ///Write models to separate file
       final formattedModels = _tryFormatCode(_generateSeparateModelsFileContent(
         models,
-        responses,
         requestBodies,
         fileNameWithoutExtension,
         dateToJson,
@@ -287,7 +304,6 @@ class SwaggerDartCodeGenerator implements Builder {
       String imports,
       String requests,
       String models,
-      String responses,
       String requestBodies,
       String customDecoder,
       String dateToJson,
@@ -298,8 +314,6 @@ $imports
 ${options.buildOnlyModels ? '' : requests}
 
 $models
-
-$responses
 
 $requestBodies
 
@@ -351,7 +365,6 @@ $numToStringFromJson
 
   String _generateSeparateModelsFileContent(
     String models,
-    String responses,
     String requestBodies,
     String fileNameWithoutExtension,
     String dateToJson,
@@ -379,8 +392,6 @@ $overridenModels
     part '$fileNameWithoutExtension.models.swagger.g.dart';
 
     $models
-
-    $responses
 
     $requestBodies
 

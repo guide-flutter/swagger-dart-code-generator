@@ -1,4 +1,6 @@
+import 'package:swagger_dart_code_generator/src/code_generators/enum_model.dart';
 import 'package:swagger_dart_code_generator/src/code_generators/swagger_models_generator.dart';
+import 'package:swagger_dart_code_generator/src/code_generators/v2/swagger_models_generator_v2.dart';
 import 'package:swagger_dart_code_generator/src/extensions/string_extension.dart';
 import 'package:swagger_dart_code_generator/src/models/generator_options.dart';
 import 'package:swagger_dart_code_generator/src/swagger_models/responses/swagger_schema.dart';
@@ -8,43 +10,71 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
   SwaggerModelsGeneratorV3(GeneratorOptions options) : super(options);
 
   @override
-  String generate(SwaggerRoot root, String fileName) {
+  String generate({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
     final schemas = components?.schemas;
+    final requestBodies = components?.requestBodies ?? {};
 
-    return generateBase(root, fileName, schemas ?? {}, true);
+    requestBodies.addAll(
+        SwaggerModelsGeneratorV2(options).getRequestBodiesFromRequests(root));
+
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: schemas ?? {},
+      generateEnumsMethods: true,
+      allEnums: allEnums,
+    );
   }
 
+  // @override
+  // String generateResponses({
+  //   required SwaggerRoot root,
+  //   required String fileName,
+  //   required List<EnumModel> allEnums,
+  // }) {
+  //   final components = root.components;
+
+  //   if (components == null) {
+  //     return '';
+  //   }
+
+  //   final responses = components.responses;
+
+  //   var result = <String, SwaggerSchema>{};
+
+  //   final allModelNames =
+  //       components.schemas.keys.map((e) => getValidatedClassName(e));
+
+  //   for (var key in responses.keys) {
+  //     if (!allModelNames.contains(key)) {
+  //       final schema = responses[key];
+
+  //       if (schema != null && schema.ref.isEmpty) {
+  //         result.addAll({key: schema});
+  //       }
+  //     }
+  //   }
+
+  //   return generateBase(
+  //     root: root,
+  //     fileName: fileName,
+  //     classes: result,
+  //     allEnums: allEnums,
+  //     generateEnumsMethods: false,
+  //   );
+  // }
+
   @override
-  String generateResponses(SwaggerRoot root, String fileName) {
-    final components = root.components;
-
-    if (components == null) {
-      return '';
-    }
-
-    final responses = components.responses;
-
-    var result = <String, SwaggerSchema>{};
-
-    final allModelNames =
-        components.schemas.keys.map((e) => getValidatedClassName(e));
-
-    for (var key in responses.keys) {
-      if (!allModelNames.contains(key)) {
-        final schema = responses[key];
-
-        if (schema != null && schema.ref.isEmpty) {
-          result.addAll({key: schema});
-        }
-      }
-    }
-
-    return generateBase(root, fileName, result, false);
-  }
-
-  @override
-  String generateRequestBodies(SwaggerRoot root, String fileName) {
+  String generateRequestBodies({
+    required SwaggerRoot root,
+    required String fileName,
+    required List<EnumModel> allEnums,
+  }) {
     final components = root.components;
     final requestBodies = components?.requestBodies ?? {};
 
@@ -69,7 +99,13 @@ class SwaggerModelsGeneratorV3 extends SwaggerModelsGenerator {
       }
     }
 
-    return generateBase(root, fileName, result, false);
+    return generateBase(
+      root: root,
+      fileName: fileName,
+      classes: result,
+      allEnums: allEnums,
+      generateEnumsMethods: false,
+    );
   }
 
   @override

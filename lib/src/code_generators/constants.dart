@@ -1,6 +1,7 @@
 const List<String> successResponseCodes = [
   '200',
   '201',
+  '202',
 ];
 
 const List<String> kKeyClasses = [
@@ -10,6 +11,7 @@ const List<String> kKeyClasses = [
   'Query',
   'Body',
   'Method',
+  'Uri',
 ];
 
 const kBasicTypes = [
@@ -71,7 +73,7 @@ const kBasicTypesMap = <String, String>{
   'boolean': 'bool',
   'bool': 'bool',
   'string': 'String',
-  'file': 'List<String>',
+  'file': 'List<int>',
   'number': 'num',
   'object': 'Object',
   'num': 'num',

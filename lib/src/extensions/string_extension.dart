@@ -18,6 +18,10 @@ extension CapitalizeExtension on String {
 
 extension TypeExtension on String {
   String makeNullable() {
+    if (this == kDynamic) {
+      return this;
+    }
+
     if (endsWith('?')) {
       return this;
     }
@@ -29,7 +33,7 @@ extension TypeExtension on String {
 
   String getUnformattedRef() => split('/').last;
 
-  String withPostfix(String postfix) => '${this}$postfix';
+  String withPostfix(String postfix) => '$this$postfix';
 
   String asList() => 'List<$this>';
 

@@ -165,7 +165,7 @@ class _$PetServiceYaml extends PetServiceYaml {
   Future<Response<ApiResponse>> _petPetIdUploadImagePost({
     required int? petId,
     String? additionalMetadata,
-    List<String>? file,
+    List<int>? file,
     String? cacheControl,
   }) {
     final Uri $url = Uri.parse('/pet/${petId}/uploadImage');
