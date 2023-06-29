@@ -146,6 +146,13 @@ String? _numToStringFromJson(dynamic? value) {
   }
   return value.toString();
   }
+  num? _numToStringToJson(String? value) {
+  if(value == null)
+  {
+    return null;
+  }
+  return num.tryParse(value!);
+  }
 ''';
   }
 

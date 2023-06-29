@@ -540,7 +540,7 @@ static $returnType $fromJsonFunction($valueType? value) => $enumNameCamelCase$fr
     final isNum = type == kString && format == 'dynamic';
 
     if (isNum) {
-      return ', fromJson: _numToStringFromJson';
+      return ', fromJson: _numToStringFromJson, toJson: _numToStringToJson';
     }
 
     return '';
